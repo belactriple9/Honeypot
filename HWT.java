@@ -10,6 +10,7 @@ class HWT extends Thread {
 
 	String smtpGreeting="220 ubuntu-s-1vcpu-2gb-amd-nyc1-01 ESMTP OpenSMTPD";
 	String smtpError="500 5.5.1 Invalid command: Command unrecognized";
+	String smtpOK="250 2.0.0 OK";
 
 	HWT (Socket sck) {
 		s=sck;
@@ -37,7 +38,7 @@ class HWT extends Thread {
 			pwd=br.readLine();
 			System.out.println("pwd: " + pwd);
 
-			bw.write(smtpError, 0, smtpError.length()); bw.newLine(); bw.flush();
+			bw.write(smtpOK, 0, smtpOK.length()); bw.newLine(); bw.flush();
 
 			// wait until the client closes the connection
 			while(true) {
