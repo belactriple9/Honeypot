@@ -39,10 +39,17 @@ class HWT extends Thread {
 
 			bw.write(smtpError, 0, smtpError.length()); bw.newLine(); bw.flush();
 
-			//while (true) {
-			for (int i=0; i<1000; i++) {
+			// wait until the client closes the connection
+			while(true) {
 				hattempt=br.readLine();
-				System.out.println("> " + hattempt);
+				System.out.println("hattempt: " + hattempt);
+				if (hattempt.equals("QUIT")) {
+					bw.write(smtpGreeting, 0, smtpGreeting.length()); bw.newLine(); bw.flush();
+					break;
+				}
+				else {
+					bw.write(smtpError, 0, smtpError.length()); bw.newLine(); bw.flush();
+				}
 			}
 
 			s.close();
