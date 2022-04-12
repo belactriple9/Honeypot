@@ -52,9 +52,9 @@ class HWT extends Thread {
 						bw.write(smtpError, 0, smtpError.length()); bw.newLine(); bw.flush();
 					}
 				}
-			} catch (Exception e) {
-				//e.printStackTrace();
-			}
+				catch (Exception e) {
+					//e.printStackTrace();
+				}
 
 			s.close();
 		} catch (Exception e) {
