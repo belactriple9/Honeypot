@@ -6,11 +6,12 @@ import java.net.*;
 class SMTP extends Thread {
 	Socket s;
 	String pwd=null, hattempt=null;
-	String so0=null, so1=null, so2=null;
+	String clientInput=null;
 
 	String smtpGreeting="220 ubuntu-s-1vcpu-2gb-amd-nyc1-01 ESMTP OpenSMTPD";
 	String smtpError="500 5.5.1 Invalid command: Command unrecognized";
 	String smtpOK="250 2.0.0 OK";
+    String smtpServerReady = "220 2.0.0 SMTP server ready";
 
 	SMTP (Socket sck) {
 		s=sck;
@@ -20,7 +21,7 @@ class SMTP extends Thread {
 		System.out.printf("honey thread created");
 	}
 
-
+    // SMTP handshake: https://www.afternerd.com/blog/smtp/
 
 	public void run() {
 		try {
@@ -40,18 +41,29 @@ class SMTP extends Thread {
 
 			bw.write(smtpOK, 0, smtpOK.length()); bw.newLine(); bw.flush();
 
-			// wait until the client closes the connection
-			while(true) {
-				hattempt=br.readLine();
-				System.out.println("hattempt: " + hattempt);
-				if (hattempt.equals("QUIT")) {
-					bw.write(smtpGreeting, 0, smtpGreeting.length()); bw.newLine(); bw.flush();
-					break;
-				}
-				else {
-					bw.write(smtpError, 0, smtpError.length()); bw.newLine(); bw.flush();
-				}
+            // read the client's reply, it should be STARTTLS
+            clientInput=br.readLine();
+            if(clientInput.equals("STARTTLS"))
+            {
+				System.out.println(clientInput);
+                bw.write(smtpServerReady, 0, smtpServerReady.length()); bw.newLine(); bw.flush();
+            }
+            else
+            {
+                bw.write(smtpError, 0, smtpError.length()); bw.newLine(); bw.flush();
+            }
+
+
+            
+			// loop forever
+			for(int i = 0; i<100; i++)
+			{
+				clientInput=br.readLine();
+				System.out.println(clientInput );
+				bw.write(smtpOK, 0, smtpOK.length()); bw.newLine(); bw.flush();
 			}
+            
+
 
 			s.close();
 		} catch (Exception e) {
