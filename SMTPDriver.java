@@ -12,6 +12,8 @@ class SMTPDriver {
 			 ServerSocket ss=null;
 			 Socket s=null;
 
+			 int connection = 0;
+
 			 if (args.length != 1) {
 				 System.out.printf("usage: java SMTPDriver portNumber\n");
 				 System.exit(1);
@@ -28,7 +30,7 @@ class SMTPDriver {
 					System.out.printf("wait for an incoming connection\n");
 			 		s = ss.accept();
 			 		System.out.printf("SMTPDriver: received an incoming connection\n");
-			 		SMTP worker = new SMTP(s);
+			 		SMTP worker = new SMTP(s, connection);
 					worker.start();
 				 } catch (Exception e2) {
 					 e2.printStackTrace();
